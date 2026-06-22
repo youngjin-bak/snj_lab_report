@@ -1,0 +1,493 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta http-equiv="Content-Style-Type" content="text/css">
+  <title></title>
+  <meta name="Generator" content="Cocoa HTML Writer">
+  <meta name="CocoaVersion" content="2685.4">
+  <style type="text/css">
+    p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica}
+    p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; min-height: 14.0px}
+  </style>
+</head>
+<body>
+<p class="p1">&lt;!DOCTYPE html&gt;</p>
+<p class="p1">&lt;html lang="ko"&gt;</p>
+<p class="p1">&lt;head&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;meta charset="UTF-8"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;title&gt;EIDOS (Expert Intelligence Digitalization Operating System)&lt;/title&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;script src="https://cdn.tailwindcss.com"&gt;&lt;/script&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;script src="https://cdn.jsdelivr.net/npm/chart.js"&gt;&lt;/script&gt;</p>
+<p class="p2"><span class="Apple-converted-space">    </span></p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;!-- Chosen Palette: Warm Neutrals &amp; Deep Slate (Background: #F9FAFB, Surface: #FFFFFF, Primary Text: #1F2937, Accent Blue: #1D4ED8, Accent Orange: #D97706) --&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;!-- Application Structure Plan: The SPA is structured as an interactive pitch deck/dashboard. It uses a fixed sidebar for easy navigation through the narrative flow: 1. Vision (Summary), 2. Problem (Why AI fails), 3. Strategy (3-Layer GT), 4. Architecture (Interactive UI mockup), 5. Execution &amp; Metrics (Data visualizations). This non-linear, sectioned approach allows stakeholders to digest complex architectural and strategic concepts intuitively, breaking down a text-heavy PRD into an engaging, visual presentation. --&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;!-- Visualization &amp; Content Choices:<span class="Apple-converted-space"> </span></p>
+<p class="p1"><span class="Apple-converted-space">         </span>- Problem Comparison: Grid cards to juxtapose AI vs Human logic.<span class="Apple-converted-space"> </span></p>
+<p class="p1"><span class="Apple-converted-space">         </span>- Architecture Flow: HTML/CSS flexbox diagrams (No SVG) to show the pipeline.<span class="Apple-converted-space"> </span></p>
+<p class="p1"><span class="Apple-converted-space">         </span>- Interactive Dashboard Mockup: A functional HTML/JS widget simulating the Active Labeling UI to demonstrate 'Zero-Blank Start' and '1-Click Approval' concepts practically.<span class="Apple-converted-space"> </span></p>
+<p class="p1"><span class="Apple-converted-space">         </span>- Resource Allocation: Chart.js Donut chart to visualize the 65-15-20 split.<span class="Apple-converted-space"> </span></p>
+<p class="p1"><span class="Apple-converted-space">         </span>- Approval Time Metric: Chart.js Line chart to visualize the operational goal (45s down to 12s).<span class="Apple-converted-space"> </span></p>
+<p class="p1"><span class="Apple-converted-space">         </span>- All charts are constrained in responsive containers. NO SVG or Mermaid used. --&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. --&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;style&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&amp;display=swap');</p>
+<p class="p1"><span class="Apple-converted-space">        </span>body { font-family: 'Noto Sans KR', sans-serif; background-color: #F9FAFB; color: #1F2937; }</p>
+<p class="p1"><span class="Apple-converted-space">        </span>.chart-container { position: relative; width: 100%; max-width: 800px; margin-left: auto; margin-right: auto; height: 350px; max-height: 400px; }</p>
+<p class="p1"><span class="Apple-converted-space">        </span>@media (max-width: 768px) { .chart-container { height: 250px; } }</p>
+<p class="p1"><span class="Apple-converted-space">        </span>.glass-panel { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); border: 1px solid rgba(229, 231, 235, 0.5); box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05); }</p>
+<p class="p1"><span class="Apple-converted-space">        </span>.nav-item.active { background-color: #EFF6FF; color: #1D4ED8; font-weight: 700; border-right: 4px solid #1D4ED8; }</p>
+<p class="p1"><span class="Apple-converted-space">        </span>.smooth-scroll { scroll-behavior: smooth; }</p>
+<p class="p2"><span class="Apple-converted-space">        </span></p>
+<p class="p1"><span class="Apple-converted-space">        </span>#toast { visibility: hidden; opacity: 0; transition: opacity 0.3s, visibility 0.3s; }</p>
+<p class="p1"><span class="Apple-converted-space">        </span>#toast.show { visibility: visible; opacity: 1; }</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/style&gt;</p>
+<p class="p1">&lt;/head&gt;</p>
+<p class="p1">&lt;body class="flex h-screen overflow-hidden antialiased smooth-scroll"&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;nav class="w-64 bg-white border-r border-gray-200 flex-shrink-0 flex flex-col hidden md:flex z-10 shadow-sm"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="p-6 border-b border-gray-100"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;h1 class="text-2xl font-black text-gray-900 tracking-tight"&gt;EIDOS&lt;span class="text-blue-600"&gt;.&lt;/span&gt;&lt;/h1&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;p class="text-xs text-gray-500 mt-1 font-medium"&gt;Expert Intelligence OS&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="flex-1 overflow-y-auto py-4"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;ul class="space-y-1"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;li&gt;&lt;a href="#section-vision" class="nav-item active block px-6 py-3 text-sm text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-colors"&gt;1. 비전 및 요약&lt;/a&gt;&lt;/li&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;li&gt;&lt;a href="#section-problem" class="nav-item block px-6 py-3 text-sm text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-colors"&gt;2. 문제 정의&lt;/a&gt;&lt;/li&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;li&gt;&lt;a href="#section-strategy" class="nav-item block px-6 py-3 text-sm text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-colors"&gt;3. 핵심 전략 (3-Layer GT)&lt;/a&gt;&lt;/li&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;li&gt;&lt;a href="#section-architecture" class="nav-item block px-6 py-3 text-sm text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-colors"&gt;4. 시스템 아키텍처&lt;/a&gt;&lt;/li&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;li&gt;&lt;a href="#section-execution" class="nav-item block px-6 py-3 text-sm text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-colors"&gt;5. 실행 계획 및 지표&lt;/a&gt;&lt;/li&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;/ul&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/nav&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;main class="flex-1 h-screen overflow-y-auto overflow-x-hidden relative" id="main-content"&gt;</p>
+<p class="p2"><span class="Apple-converted-space">        </span></p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;header class="md:hidden bg-white border-b border-gray-200 p-4 sticky top-0 z-20 flex justify-between items-center shadow-sm"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;h1 class="text-xl font-black text-gray-900"&gt;EIDOS&lt;span class="text-blue-600"&gt;.&lt;/span&gt;&lt;/h1&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;button id="mobile-menu-btn" class="text-gray-600 focus:outline-none text-2xl"&gt;☰&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/header&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div id="mobile-menu" class="md:hidden hidden bg-white border-b border-gray-200 absolute w-full z-10 shadow-lg"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;ul class="py-2"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;li&gt;&lt;a href="#section-vision" class="mobile-nav-item block px-6 py-3 text-sm text-gray-700 border-b border-gray-50"&gt;1. 비전 및 요약&lt;/a&gt;&lt;/li&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;li&gt;&lt;a href="#section-problem" class="mobile-nav-item block px-6 py-3 text-sm text-gray-700 border-b border-gray-50"&gt;2. 문제 정의&lt;/a&gt;&lt;/li&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;li&gt;&lt;a href="#section-strategy" class="mobile-nav-item block px-6 py-3 text-sm text-gray-700 border-b border-gray-50"&gt;3. 핵심 전략&lt;/a&gt;&lt;/li&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;li&gt;&lt;a href="#section-architecture" class="mobile-nav-item block px-6 py-3 text-sm text-gray-700 border-b border-gray-50"&gt;4. 시스템 아키텍처&lt;/a&gt;&lt;/li&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;li&gt;&lt;a href="#section-execution" class="mobile-nav-item block px-6 py-3 text-sm text-gray-700"&gt;5. 실행 계획 및 지표&lt;/a&gt;&lt;/li&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;/ul&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="max-w-5xl mx-auto px-6 py-12 md:py-20 space-y-32"&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;section id="section-vision" class="scroll-mt-20"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;div class="mb-8"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;span class="inline-block py-1 px-3 rounded-full bg-blue-100 text-blue-700 text-xs font-bold tracking-wider uppercase mb-3"&gt;Executive Summary&lt;/span&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;h2 class="text-4xl md:text-5xl font-black text-gray-900 leading-tight mb-4"&gt;From Tacit Expertise to &lt;br&gt;&lt;span class="text-blue-600"&gt;Structured Intelligence&lt;/span&gt;&lt;/h2&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;p class="text-lg text-gray-600 leading-relaxed font-light"&gt;EIDOS는 단순한 AI 예측 모델이 아닙니다. 전문가의 머릿속에만 존재하는 보이지 않는 판단의 형상(εἶδος)을 발견하고, 이를 조직의 재사용 가능한 자산으로 변환하는 &lt;strong class="font-bold text-gray-900"&gt;지식 운영체제(Knowledge Operating System)&lt;/strong&gt;입니다.&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;div class="grid md:grid-cols-2 gap-6"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;div class="glass-panel p-8 rounded-2xl border-t-4 border-blue-600"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;div class="text-3xl mb-4"&gt;🎯&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;h3 class="text-xl font-bold text-gray-900 mb-2"&gt;핵심 검증 가설&lt;/h3&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;p class="text-gray-600 text-sm leading-relaxed"&gt;"전문가의 암묵지는 충분한 관찰과 적절한 인터랙션 설계를 통해 반복 가능한 데이터 구조로 변환될 수 있는가?" 본 프로젝트는 직관의 100% 구조화를 전제하지 않으며, 실제 자산화 가능한 지식의 수율(Yield)을 측정하는 데 집중합니다.&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;div class="glass-panel p-8 rounded-2xl border-t-4 border-orange-500"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;div class="text-3xl mb-4"&gt;⚙️&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;h3 class="text-xl font-bold text-gray-900 mb-2"&gt;AI 고도화의 전제 조건&lt;/h3&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;p class="text-gray-600 text-sm leading-relaxed"&gt;정답(Ground Truth)이 정의되지 않은 상태에서 AI 모델만 고도화하는 것은 엔진 없는 자동차에 터보를 다는 것과 같습니다. EIDOS는 모델 학습 이전에 견고한 GT 생성 플라이휠(Flywheel)을 구축합니다.&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;/section&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;section id="section-problem" class="scroll-mt-20"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;div class="mb-8"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;h2 class="text-3xl font-black text-gray-900 mb-4"&gt;Why Existing AI Fails&lt;/h2&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;p class="text-gray-600 leading-relaxed"&gt;현재 AI 모델이 인간 전문가를 따라잡지 못하는 것은 연산 능력의 부족이 아닙니다. AI가 시장 정보를 다루는 구조적 한계, 즉 &lt;strong class="text-gray-900 font-bold"&gt;'상대적 기준'과 '시장 국면'의 부재&lt;/strong&gt; 때문입니다. 이 섹션은 직관의 간극이 어디서 발생하는지 명확히 보여줍니다.&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;div class="bg-gray-50 p-4 border-b border-gray-200 text-center"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;span class="text-xs font-bold text-gray-500 uppercase tracking-wider"&gt;이벤트 발생&lt;/span&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;div class="text-lg font-bold text-gray-800 mt-1"&gt;"A기업, 3분기 매출 전년 대비 5% 감소 발표"&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;</p>
+<p class="p2"><span class="Apple-converted-space">                    </span></p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;div class="grid md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-gray-200"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;div class="p-8"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                            </span>&lt;div class="flex items-center justify-between mb-6"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                                </span>&lt;h3 class="text-xl font-bold text-gray-900 flex items-center"&gt;🤖 기존 AI 모델&lt;/h3&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                                </span>&lt;span class="bg-red-100 text-red-700 px-3 py-1 rounded-full text-xs font-bold"&gt;Strong Sell&lt;/span&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                            </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                            </span>&lt;ul class="space-y-4"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                                </span>&lt;li class="flex items-start"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                                    </span>&lt;span class="text-red-500 mr-2"&gt;❌&lt;/span&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                                    </span>&lt;div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                                        </span>&lt;p class="text-sm font-bold text-gray-900"&gt;절대 평가의 오류&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                                        </span>&lt;p class="text-xs text-gray-600 mt-1"&gt;텍스트 내의 "감소"라는 키워드와 부정적 문맥만을 감지하여 즉각적인 매도 시그널 생성.&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                                    </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                                </span>&lt;/li&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                                </span>&lt;li class="flex items-start"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                                    </span>&lt;span class="text-red-500 mr-2"&gt;❌&lt;/span&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                                    </span>&lt;div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                                        </span>&lt;p class="text-sm font-bold text-gray-900"&gt;정적 로직의 한계&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                                        </span>&lt;p class="text-xs text-gray-600 mt-1"&gt;현재 시장이 실적 장세인지, 테마 장세인지 동적인 맥락(Market Regime)을 읽지 못함.&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                                    </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                                </span>&lt;/li&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                            </span>&lt;/ul&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;/div&gt;</p>
+<p class="p2"><span class="Apple-converted-space">                        </span></p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;div class="p-8 bg-blue-50/30"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                            </span>&lt;div class="flex items-center justify-between mb-6"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                                </span>&lt;h3 class="text-xl font-bold text-gray-900 flex items-center"&gt;🧠 인간 전문가 (Expert)&lt;/h3&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                                </span>&lt;span class="bg-green-100 text-green-700 px-3 py-1 rounded-full text-xs font-bold"&gt;Weak Buy&lt;/span&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                            </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                            </span>&lt;ul class="space-y-4"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                                </span>&lt;li class="flex items-start"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                                    </span>&lt;span class="text-green-500 mr-2"&gt;✅&lt;/span&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                                    </span>&lt;div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                                        </span>&lt;p class="text-sm font-bold text-gray-900"&gt;상대적 기준 (Reference Point)&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                                        </span>&lt;p class="text-xs text-gray-600 mt-1"&gt;시장 컨센서스(-10%) 대비 선방했음을 계산하여, 이를 '악재 해소(Uncertainty Resolved)'로 상대 평가함.&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                                    </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                                </span>&lt;/li&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                                </span>&lt;li class="flex items-start"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                                    </span>&lt;span class="text-green-500 mr-2"&gt;✅&lt;/span&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                                    </span>&lt;div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                                        </span>&lt;p class="text-sm font-bold text-gray-900"&gt;동적 상황 인지&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                                        </span>&lt;p class="text-xs text-gray-600 mt-1"&gt;현재 A기업이 속한 섹터의 밸류체인 낙수 효과를 고려하여 단기 반등 모멘텀으로 인식함.&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                                    </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                                </span>&lt;/li&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                            </span>&lt;/ul&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;/section&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;section id="section-strategy" class="scroll-mt-20"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;div class="mb-8"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;h2 class="text-3xl font-black text-gray-900 mb-4"&gt;Core Strategy: 3-Layer GT&lt;/h2&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;p class="text-gray-600 leading-relaxed"&gt;데이 트레이딩 환경에서는 전문가 간의 이견이 빈번하며 단순 다수결이 항상 정답이 될 수 없습니다. EIDOS는 오류를 방지하고 진정한 인사이트를 추출하기 위해 Ground Truth를 세 가지 계층(행동 증거, 주관적 추론, 객관적 결과)으로 분리하여 관리합니다.&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;div class="space-y-4 relative before:absolute before:inset-0 before:ml-5 before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-0.5 before:bg-gradient-to-b before:from-transparent before:via-gray-300 before:to-transparent"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;div class="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group is-active"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;div class="flex items-center justify-center w-10 h-10 rounded-full border-4 border-white bg-blue-100 text-blue-600 shadow shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 z-10 text-lg font-bold"&gt;1&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;div class="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] glass-panel p-5 rounded-xl"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                            </span>&lt;div class="flex items-center justify-between mb-1"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                                </span>&lt;h4 class="font-bold text-gray-900"&gt;Layer 1: Behavioral Evidence&lt;/h4&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                                </span>&lt;span class="text-xs font-semibold text-gray-500 bg-gray-100 px-2 py-1 rounded"&gt;객관적 사실&lt;/span&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                            </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                            </span>&lt;p class="text-sm text-gray-600"&gt;전문가가 특정 뉴스 발생 시 어떤 포털, 공시, ETF 화면을 조회했는지 추적합니다. 이는 GT 자체가 아니라 인터뷰를 유도하기 위한 '회고 트리거'로 작용합니다.&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;div class="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group is-active"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;div class="flex items-center justify-center w-10 h-10 rounded-full border-4 border-white bg-blue-500 text-white shadow shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 z-10 text-lg font-bold"&gt;2&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;div class="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] glass-panel p-5 rounded-xl border-blue-200"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                            </span>&lt;div class="flex items-center justify-between mb-1"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                                </span>&lt;h4 class="font-bold text-gray-900"&gt;Layer 2: Reasoning GT&lt;/h4&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                                </span>&lt;span class="text-xs font-semibold text-blue-700 bg-blue-50 px-2 py-1 rounded"&gt;주관적 논리&lt;/span&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                            </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                            </span>&lt;p class="text-sm text-gray-600"&gt;"왜 그런 결론을 내렸는가?" AI 초안에 대해 전문가가 승인하거나 수정한 판단 프레임워크(Taxonomy)가 저장되는 핵심 지식 계층입니다.&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;div class="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group is-active"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;div class="flex items-center justify-center w-10 h-10 rounded-full border-4 border-white bg-gray-800 text-white shadow shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 z-10 text-lg font-bold"&gt;3&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;div class="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] glass-panel p-5 rounded-xl"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                            </span>&lt;div class="flex items-center justify-between mb-1"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                                </span>&lt;h4 class="font-bold text-gray-900"&gt;Layer 3: Market Outcome&lt;/h4&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                                </span>&lt;span class="text-xs font-semibold text-gray-500 bg-gray-100 px-2 py-1 rounded"&gt;시장 결과&lt;/span&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                            </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                            </span>&lt;p class="text-sm text-gray-600"&gt;시그널 이후의 실제 주가 움직임입니다. 거시적 충격에 의한 오염을 막기 위해 Outcome을 맹목적 정답으로 삼지 않고 추론의 퀄리티와 분리합니다.&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;/section&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;section id="section-architecture" class="scroll-mt-20"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;div class="mb-8"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;h2 class="text-3xl font-black text-gray-900 mb-4"&gt;EIDOS Architecture &amp; Interactive UI&lt;/h2&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;p class="text-gray-600 leading-relaxed"&gt;암묵지가 명시적 지식으로 변환되기 위해서는 &lt;strong&gt;[Capture ➔ Label ➔ Validate]&lt;/strong&gt;의 3단계 파이프라인을 거쳐야 합니다. 특히 Stage 2의 라벨링 대시보드는 전문가에게 백지를 주지 않고 '1-Click 승인'을 유도하여 행동 마찰을 극단적으로 낮춥니다. 아래 대시보드 시뮬레이션을 통해 직접 경험해 보십시오.&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;div class="bg-gray-900 rounded-xl p-1 mb-8 shadow-lg"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;div class="flex justify-between items-center bg-gray-800 px-4 py-2 rounded-t-lg border-b border-gray-700"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;div class="flex space-x-2"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                            </span>&lt;div class="w-3 h-3 rounded-full bg-red-500"&gt;&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                            </span>&lt;div class="w-3 h-3 rounded-full bg-yellow-500"&gt;&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                            </span>&lt;div class="w-3 h-3 rounded-full bg-green-500"&gt;&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;div class="text-xs text-gray-400 font-mono"&gt;EIDOS Active Labeling Dashboard&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;</p>
+<p class="p2"><span class="Apple-converted-space">                    </span></p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;div class="bg-white p-6 md:p-8 rounded-b-lg"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;div class="border-l-4 border-red-500 pl-4 mb-6"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                            </span>&lt;p class="text-xs font-bold text-gray-500 uppercase tracking-wide mb-1"&gt;Event Alert&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                            </span>&lt;h3 class="text-lg font-bold text-gray-900"&gt;"A기업, 3분기 매출 전년 대비 5% 감소 발표"&lt;/h3&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                            </span>&lt;p class="text-xs text-gray-500 mt-1"&gt;09:12 AM | Source: 전자공시시스템&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;div class="bg-gray-50 rounded-lg p-5 border border-gray-200 mb-6"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                            </span>&lt;div class="flex items-center justify-between mb-4 pb-3 border-b border-gray-200"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                                </span>&lt;h4 class="font-bold text-gray-800 flex items-center"&gt;🤖 AI Signal Draft&lt;/h4&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                                </span>&lt;span class="bg-blue-100 text-blue-800 border border-blue-200 px-3 py-1 rounded text-sm font-bold shadow-sm"&gt;WEAK BUY&lt;/span&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                            </span>&lt;/div&gt;</p>
+<p class="p2"><span class="Apple-converted-space">                            </span></p>
+<p class="p1"><span class="Apple-converted-space">                            </span>&lt;p class="text-xs font-bold text-gray-500 uppercase mb-3"&gt;AI Reasoning Trace (추론 근거 가설)&lt;/p&gt;</p>
+<p class="p2"><span class="Apple-converted-space">                            </span></p>
+<p class="p1"><span class="Apple-converted-space">                            </span>&lt;div class="space-y-3" id="reasoning-list"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                                </span>&lt;label class="flex items-start p-3 bg-white border border-gray-200 rounded cursor-pointer hover:bg-blue-50 transition-colors"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                                    </span>&lt;input type="checkbox" checked class="mt-1 mr-3 h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                                    </span>&lt;div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                                        </span>&lt;span class="text-xs font-bold bg-gray-100 text-gray-600 px-2 py-0.5 rounded mr-2"&gt;Reference Point&lt;/span&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                                        </span>&lt;span class="text-sm text-gray-800"&gt;시장 컨센서스(-10%) 대비 +5% 상회함 (악재 해소)&lt;/span&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                                    </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                                </span>&lt;/label&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                                </span>&lt;label class="flex items-start p-3 bg-white border border-gray-200 rounded cursor-pointer hover:bg-blue-50 transition-colors"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                                    </span>&lt;input type="checkbox" checked class="mt-1 mr-3 h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                                    </span>&lt;div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                                        </span>&lt;span class="text-xs font-bold bg-gray-100 text-gray-600 px-2 py-0.5 rounded mr-2"&gt;Market Regime&lt;/span&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                                        </span>&lt;span class="text-sm text-gray-800"&gt;현재 코스닥 AI 반도체 섹터 강세장 유지 중&lt;/span&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                                    </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                                </span>&lt;/label&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                                </span>&lt;label class="flex items-start p-3 bg-white border border-gray-200 rounded cursor-pointer hover:bg-blue-50 transition-colors"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                                    </span>&lt;input type="checkbox" checked class="mt-1 mr-3 h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                                    </span>&lt;div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                                        </span>&lt;span class="text-xs font-bold bg-gray-100 text-gray-600 px-2 py-0.5 rounded mr-2"&gt;Peer Flow&lt;/span&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                                        </span>&lt;span class="text-sm text-gray-800"&gt;B기업(경쟁사) 동반 상승세 확인됨&lt;/span&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                                    </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                                </span>&lt;/label&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                            </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;div class="flex flex-col items-center"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                            </span>&lt;p class="text-sm font-medium text-gray-700 mb-4"&gt;👉 위 시그널과 추론 근거에 동의하십니까?&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                            </span>&lt;div class="flex w-full md:w-auto space-x-3"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                                </span>&lt;button id="btn-approve" class="flex-1 md:flex-none bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-lg shadow-md transition-transform transform hover:-translate-y-0.5"&gt;APPROVE (Y)&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                                </span>&lt;button id="btn-reject" class="flex-1 md:flex-none bg-white hover:bg-gray-50 text-gray-700 font-bold py-3 px-8 border border-gray-300 rounded-lg shadow-sm transition-colors"&gt;REJECT &amp; EDIT (N)&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                            </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;div class="grid md:grid-cols-3 gap-4 mt-8"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;div class="bg-white p-5 rounded-lg border border-gray-200 shadow-sm"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;div class="text-blue-600 font-bold mb-2"&gt;Stage 1: Capture&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;p class="text-sm text-gray-600"&gt;브라우저 확장 프로그램을 통한 행동 로그 수집 및 사내 메신저 STT 봇 연동.&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;div class="bg-blue-50 p-5 rounded-lg border border-blue-200 shadow-sm ring-1 ring-blue-500 ring-opacity-50"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;div class="text-blue-800 font-bold mb-2"&gt;Stage 2: Label (UI 위쪽)&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;p class="text-sm text-gray-700"&gt;콜드스타트 엔진이 초안을 제공하고, 전문가는 1-Click 승인으로 마찰 비용을 최소화.&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;div class="bg-white p-5 rounded-lg border border-gray-200 shadow-sm"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;div class="text-gray-800 font-bold mb-2"&gt;Stage 3: Validate&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;p class="text-sm text-gray-600"&gt;주 1회 핵심 10건(High-value Cases)을 추출하여 PM 주도의 심층 회고 및 GT 확정.&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;/section&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;section id="section-execution" class="scroll-mt-20"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;div class="mb-8"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;h2 class="text-3xl font-black text-gray-900 mb-4"&gt;Execution &amp; Metrics&lt;/h2&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;p class="text-gray-600 leading-relaxed"&gt;2개월 MVP 기간 동안 가용 리소스는 철저히 '콜드스타트 방지'와 '전문가 참여 마찰 해소'에 비대칭적으로 배분됩니다. 성공 여부는 모델의 정확도가 아니라, 실제 추출된 지식의 수율과 단축된 검토 시간으로 증명됩니다.&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;div class="grid lg:grid-cols-2 gap-10"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;div class="glass-panel p-6 rounded-2xl"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;h3 class="text-lg font-bold text-gray-900 mb-2"&gt;비대칭적 리소스 분배 전략&lt;/h3&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;p class="text-sm text-gray-500 mb-6"&gt;AI 파인튜닝을 전면 배제하고 지식 수집 인프라에 집중.&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;div class="chart-container relative w-full max-w-sm mx-auto h-[250px] max-h-[300px]"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                            </span>&lt;canvas id="resourceChart"&gt;&lt;/canvas&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;div class="mt-4 text-xs text-gray-600 space-y-2"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                            </span>&lt;p&gt;&lt;strong class="text-blue-600"&gt;65% (P0):&lt;/strong&gt; 지식 수집 인프라 (Behavior Tracker, Dashboard)&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                            </span>&lt;p&gt;&lt;strong class="text-orange-500"&gt;15% (P0):&lt;/strong&gt; 콜드스타트 추론 엔진 (LLM API + Rule-based)&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                            </span>&lt;p&gt;&lt;strong class="text-gray-500"&gt;20% (P1):&lt;/strong&gt; 검증 및 정제 루프 (Weekly Dive-deep Data Pipeline)&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;div class="glass-panel p-6 rounded-2xl"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;h3 class="text-lg font-bold text-gray-900 mb-2"&gt;Operational North Star Metric&lt;/h3&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;p class="text-sm text-gray-500 mb-6"&gt;전문가 1건 검토 시간 (Expert Approval Time) 변화 추이&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;div class="chart-container relative w-full max-w-lg mx-auto h-[250px] max-h-[300px]"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                            </span>&lt;canvas id="metricChart"&gt;&lt;/canvas&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;div class="mt-4 bg-gray-50 p-3 rounded text-sm text-gray-700"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                            </span>&lt;strong&gt;핵심 목표:&lt;/strong&gt; 45초 소요되던 검토 시간을 12초 이내로 단축시켜, 업무 흐름을 방해하지 않는 완벽한 플라이휠 안착 증명.</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;div class="mt-10 bg-white border border-gray-200 rounded-xl p-8 shadow-sm"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;div class="flex items-start"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;div class="text-3xl mr-4 mt-1"&gt;💎&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                            </span>&lt;h3 class="text-xl font-bold text-gray-900 mb-2"&gt;핵심 검증 지표: Knowledge Extraction Yield (수율)&lt;/h3&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                            </span>&lt;p class="text-gray-600 text-sm leading-relaxed mb-4"&gt;본 프로젝트는 전문가 판단의 100% 구조화를 보장하지 않습니다. 전체 피드백 사례 중, "그냥 느낌이 그랬어"와 같은 비구조적 직관을 제외하고, &lt;strong&gt;실제 시스템의 언어(Taxonomy)로 온전히 번역되어 구조화된 비율(예: 62%)&lt;/strong&gt;을 산출합니다. 이 지식 추출 수율이 본 프로젝트의 실제 타당성을 증명하는 가장 중요한 지표입니다.&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;/section&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
+<p class="p2"><span class="Apple-converted-space">        </span></p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;footer class="bg-gray-900 text-gray-400 py-12 text-center text-sm border-t border-gray-800"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;p class="mb-2 text-white font-bold tracking-widest uppercase"&gt;EIDOS Project&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;p&gt;From Tacit Expertise to Structured Intelligence&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/footer&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div id="toast" class="fixed bottom-8 left-1/2 transform -translate-x-1/2 bg-gray-900 text-white px-6 py-3 rounded-full shadow-2xl z-50 flex items-center"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;span class="mr-2 text-green-400"&gt;✓&lt;/span&gt;<span class="Apple-converted-space"> </span></p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;span id="toast-msg" class="font-medium text-sm"&gt;&lt;/span&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/main&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;script&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>document.addEventListener('DOMContentLoaded', () =&gt; {</p>
+<p class="p2"><span class="Apple-converted-space">            </span></p>
+<p class="p1"><span class="Apple-converted-space">            </span>const mainContent = document.getElementById('main-content');</p>
+<p class="p1"><span class="Apple-converted-space">            </span>const navItems = document.querySelectorAll('.nav-item, .mobile-nav-item');</p>
+<p class="p2"><span class="Apple-converted-space">            </span></p>
+<p class="p1"><span class="Apple-converted-space">            </span>const observerOptions = {</p>
+<p class="p1"><span class="Apple-converted-space">                </span>root: mainContent,</p>
+<p class="p1"><span class="Apple-converted-space">                </span>rootMargin: '0px 0px -50% 0px',</p>
+<p class="p1"><span class="Apple-converted-space">                </span>threshold: 0</p>
+<p class="p1"><span class="Apple-converted-space">            </span>};</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">            </span>const observer = new IntersectionObserver((entries) =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">                </span>entries.forEach(entry =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>if (entry.isIntersecting) {</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>const id = entry.target.getAttribute('id');</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>navItems.forEach(nav =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">                            </span>nav.classList.remove('active', 'bg-blue-50', 'text-blue-700', 'font-bold', 'border-blue-600');</p>
+<p class="p1"><span class="Apple-converted-space">                            </span>if (nav.getAttribute('href') === `#${id}`) {</p>
+<p class="p1"><span class="Apple-converted-space">                                </span>if(nav.classList.contains('nav-item')) {</p>
+<p class="p1"><span class="Apple-converted-space">                                    </span>nav.classList.add('active');</p>
+<p class="p1"><span class="Apple-converted-space">                                </span>} else {</p>
+<p class="p1"><span class="Apple-converted-space">                                    </span>nav.classList.add('text-blue-700', 'font-bold');</p>
+<p class="p1"><span class="Apple-converted-space">                                </span>}</p>
+<p class="p1"><span class="Apple-converted-space">                            </span>}</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>});</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>}</p>
+<p class="p1"><span class="Apple-converted-space">                </span>});</p>
+<p class="p1"><span class="Apple-converted-space">            </span>}, observerOptions);</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">            </span>document.querySelectorAll('section').forEach(section =&gt; observer.observe(section));</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">            </span>const mobileBtn = document.getElementById('mobile-menu-btn');</p>
+<p class="p1"><span class="Apple-converted-space">            </span>const mobileMenu = document.getElementById('mobile-menu');</p>
+<p class="p2"><span class="Apple-converted-space">            </span></p>
+<p class="p1"><span class="Apple-converted-space">            </span>mobileBtn.addEventListener('click', () =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">                </span>mobileMenu.classList.toggle('hidden');</p>
+<p class="p1"><span class="Apple-converted-space">            </span>});</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">            </span>document.querySelectorAll('.mobile-nav-item').forEach(item =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">                </span>item.addEventListener('click', () =&gt; mobileMenu.classList.add('hidden'));</p>
+<p class="p1"><span class="Apple-converted-space">            </span>});</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">            </span>const btnApprove = document.getElementById('btn-approve');</p>
+<p class="p1"><span class="Apple-converted-space">            </span>const btnReject = document.getElementById('btn-reject');</p>
+<p class="p1"><span class="Apple-converted-space">            </span>const toast = document.getElementById('toast');</p>
+<p class="p1"><span class="Apple-converted-space">            </span>const toastMsg = document.getElementById('toast-msg');</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">            </span>function showToast(message, isSuccess = true) {</p>
+<p class="p1"><span class="Apple-converted-space">                </span>toastMsg.textContent = message;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>toast.querySelector('span:first-child').textContent = isSuccess ? '✓' : 'ℹ️';</p>
+<p class="p1"><span class="Apple-converted-space">                </span>toast.querySelector('span:first-child').className = isSuccess ? 'mr-2 text-green-400' : 'mr-2 text-orange-400';</p>
+<p class="p1"><span class="Apple-converted-space">                </span>toast.classList.add('show');</p>
+<p class="p1"><span class="Apple-converted-space">                </span>setTimeout(() =&gt; toast.classList.remove('show'), 3000);</p>
+<p class="p1"><span class="Apple-converted-space">            </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">            </span>btnApprove.addEventListener('click', () =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">                </span>showToast('GT 데이터셋(Layer 1,2,3)이 시스템에 성공적으로 저장되었습니다.');</p>
+<p class="p1"><span class="Apple-converted-space">            </span>});</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">            </span>btnReject.addEventListener('click', () =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">                </span>showToast('수정 모드 활성화: 틀린 항목의 체크를 해제하고 대안을 선택하세요.', false);</p>
+<p class="p1"><span class="Apple-converted-space">                </span>document.querySelectorAll('input[type="checkbox"]').forEach(cb =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>cb.parentElement.classList.add('border-orange-300', 'bg-orange-50');</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>setTimeout(() =&gt; cb.parentElement.classList.remove('border-orange-300', 'bg-orange-50'), 1500);</p>
+<p class="p1"><span class="Apple-converted-space">                </span>});</p>
+<p class="p1"><span class="Apple-converted-space">            </span>});</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">            </span>const ctxResource = document.getElementById('resourceChart').getContext('2d');</p>
+<p class="p1"><span class="Apple-converted-space">            </span>new Chart(ctxResource, {</p>
+<p class="p1"><span class="Apple-converted-space">                </span>type: 'doughnut',</p>
+<p class="p1"><span class="Apple-converted-space">                </span>data: {</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>labels: ['수집 인프라 (P0)', '검증/정제 루프 (P1)', '콜드스타트 엔진 (P0)'],</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>datasets: [{</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>data: [65, 20, 15],</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>backgroundColor: ['#2563eb', '#6b7280', '#f97316'],</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>borderWidth: 0,</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>hoverOffset: 4</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>}]</p>
+<p class="p1"><span class="Apple-converted-space">                </span>},</p>
+<p class="p1"><span class="Apple-converted-space">                </span>options: {</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>responsive: true,</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>maintainAspectRatio: false,</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>cutout: '70%',</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>plugins: {</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>legend: { display: false },</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>tooltip: {</p>
+<p class="p1"><span class="Apple-converted-space">                            </span>callbacks: {</p>
+<p class="p1"><span class="Apple-converted-space">                                </span>label: function(context) { return ' ' + context.label + ': ' + context.parsed + '%'; }</p>
+<p class="p1"><span class="Apple-converted-space">                            </span>}</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>}</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>}</p>
+<p class="p1"><span class="Apple-converted-space">                </span>}</p>
+<p class="p1"><span class="Apple-converted-space">            </span>});</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">            </span>const ctxMetric = document.getElementById('metricChart').getContext('2d');</p>
+<p class="p1"><span class="Apple-converted-space">            </span>new Chart(ctxMetric, {</p>
+<p class="p1"><span class="Apple-converted-space">                </span>type: 'line',</p>
+<p class="p1"><span class="Apple-converted-space">                </span>data: {</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4', 'Week 5', 'Week 6', 'Week 7', 'Week 8'],</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>datasets: [{</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>label: '검토 소요 시간 (초)',</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>data: [45, 42, 35, 28, 20, 16, 13, 12],</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>borderColor: '#2563eb',</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>backgroundColor: 'rgba(37, 99, 235, 0.1)',</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>borderWidth: 3,</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>pointBackgroundColor: '#fff',</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>pointBorderColor: '#2563eb',</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>pointBorderWidth: 2,</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>pointRadius: 4,</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>fill: true,</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>tension: 0.4</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>}]</p>
+<p class="p1"><span class="Apple-converted-space">                </span>},</p>
+<p class="p1"><span class="Apple-converted-space">                </span>options: {</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>responsive: true,</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>maintainAspectRatio: false,</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>plugins: {</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>legend: { display: false },</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>tooltip: {</p>
+<p class="p1"><span class="Apple-converted-space">                            </span>callbacks: {</p>
+<p class="p1"><span class="Apple-converted-space">                                </span>label: function(context) { return ' ' + context.parsed.y + ' 초'; }</p>
+<p class="p1"><span class="Apple-converted-space">                            </span>}</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>}</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>},</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>scales: {</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>y: {</p>
+<p class="p1"><span class="Apple-converted-space">                            </span>beginAtZero: true,</p>
+<p class="p1"><span class="Apple-converted-space">                            </span>max: 50,</p>
+<p class="p1"><span class="Apple-converted-space">                            </span>grid: { color: '#e5e7eb', drawBorder: false },</p>
+<p class="p1"><span class="Apple-converted-space">                            </span>ticks: { stepSize: 10, color: '#6b7280' }</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>},</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>x: {</p>
+<p class="p1"><span class="Apple-converted-space">                            </span>grid: { display: false, drawBorder: false },</p>
+<p class="p1"><span class="Apple-converted-space">                            </span>ticks: { color: '#6b7280' }</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>}</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>}</p>
+<p class="p1"><span class="Apple-converted-space">                </span>}</p>
+<p class="p1"><span class="Apple-converted-space">            </span>});</p>
+<p class="p1"><span class="Apple-converted-space">        </span>});</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/script&gt;</p>
+<p class="p1">&lt;/body&gt;</p>
+<p class="p1">&lt;/html&gt;</p>
+</body>
+</html>
