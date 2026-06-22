@@ -1,0 +1,1315 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>EIDOS Interactive Report</title>
+  <style>
+    :root {
+      --bg: #f6f8fb;
+      --panel: #ffffff;
+      --ink: #111827;
+      --muted: #64748b;
+      --line: #d9e2ec;
+      --primary: #3157c9;
+      --primary-soft: #e9efff;
+      --buy: #0f9f6e;
+      --buy-soft: #e7f8f1;
+      --sell: #d64242;
+      --sell-soft: #fff0f0;
+      --warn: #b7791f;
+      --warn-soft: #fff7e6;
+      --dark: #1f2937;
+      --shadow: 0 20px 50px rgba(15, 23, 42, 0.08);
+      --radius: 8px;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
+      color: var(--ink);
+      background: var(--bg);
+      line-height: 1.72;
+      word-break: keep-all;
+      overflow-wrap: anywhere;
+    }
+    button, input, select, textarea { font: inherit; }
+    button { cursor: pointer; }
+    a { color: inherit; text-decoration: none; }
+
+    .shell { display: grid; grid-template-columns: 260px 1fr; min-height: 100vh; }
+    .sidebar {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      background: #fff;
+      border-right: 1px solid var(--line);
+      padding: 24px 18px;
+      overflow-y: auto;
+    }
+    .brand { padding: 0 6px 20px; border-bottom: 1px solid var(--line); }
+    .brand h1 { margin: 0; font-size: 27px; letter-spacing: 0; }
+    .brand span { color: var(--primary); }
+    .brand p { margin: 5px 0 0; color: var(--muted); font-size: 10.5px; line-height: 1.35; font-weight: 800; max-width: 190px; }
+    .nav { display: grid; gap: 4px; margin-top: 18px; }
+    .nav a {
+      display: block;
+      padding: 10px 12px;
+      border-left: 4px solid transparent;
+      border-radius: 0 var(--radius) var(--radius) 0;
+      color: #526174;
+      font-size: 14px;
+      font-weight: 700;
+    }
+    .nav a:hover, .nav a.active { color: var(--primary); background: var(--primary-soft); border-left-color: var(--primary); }
+
+    main { padding: 48px; overflow: hidden; }
+    .content { max-width: 1180px; margin: 0 auto; display: grid; gap: 110px; }
+    section { scroll-margin-top: 32px; min-height: 760px; padding: 34px 0; display: flex; flex-direction: column; justify-content: center; }
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: var(--primary-soft);
+      color: var(--primary);
+      font-size: 12px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+    }
+    h2 { margin: 18px 0 22px; font-size: clamp(30px, 5vw, 56px); line-height: 1.16; letter-spacing: 0; }
+    h3 { margin: 0 0 14px; font-size: 23px; line-height: 1.32; }
+    h4 { margin: 0 0 8px; font-size: 16px; }
+    p { margin: 0; }
+    .lead { max-width: 960px; color: #334155; font-size: 20px; line-height: 1.85; }
+    .muted { color: var(--muted); }
+    .small { font-size: 13px; }
+    .micro { font-size: 11px; text-transform: uppercase; letter-spacing: .08em; font-weight: 900; }
+    .highlight { color: var(--primary); }
+
+    .grid { display: grid; gap: 18px; }
+    .two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .three { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .four { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 30px;
+    }
+    .card h3, .card h4 { font-weight: 950; }
+    .card p { line-height: 1.82; }
+    .flat { box-shadow: none; }
+    .band {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: #fff;
+      overflow: hidden;
+    }
+    .band-head {
+      padding: 18px 22px;
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 26px;
+      padding: 4px 9px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: #fff;
+      color: #475569;
+      font-size: 12px;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+    .pill.buy { color: var(--buy); border-color: #b6ead7; background: var(--buy-soft); }
+    .pill.sell { color: var(--sell); border-color: #ffd0d0; background: var(--sell-soft); }
+    .pill.warn { color: var(--warn); border-color: #f6d78a; background: var(--warn-soft); }
+    .metric {
+      font-size: 38px;
+      line-height: 1;
+      font-weight: 950;
+      margin: 10px 0 4px;
+    }
+    .quote {
+      border-left: 4px solid var(--primary);
+      background: #fff;
+      padding: 18px 20px;
+      border-radius: 0 var(--radius) var(--radius) 0;
+      font-size: 18px;
+      font-weight: 800;
+      color: #1e293b;
+      line-height: 1.72;
+    }
+
+    .flow { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; align-items: stretch; }
+    .step { background: #fff; border: 1px solid var(--line); border-radius: var(--radius); padding: 16px; min-height: 128px; }
+    .step .num { width: 30px; height: 30px; display: grid; place-items: center; color: #fff; background: var(--primary); border-radius: 999px; font-weight: 900; margin-bottom: 12px; }
+    .arrow { align-self: center; text-align: center; color: var(--muted); font-weight: 900; }
+    .loop {
+      position: relative;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 22px;
+      margin-top: 30px;
+      padding: 30px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: #fff;
+      box-shadow: var(--shadow);
+    }
+    .loop:after {
+      content: "Closed Feedback Loop";
+      position: absolute;
+      left: 50%;
+      bottom: -18px;
+      transform: translateX(-50%);
+      padding: 8px 14px;
+      border: 1px solid #b9c7ff;
+      border-radius: 999px;
+      background: var(--primary-soft);
+      color: var(--primary);
+      font-size: 12px;
+      font-weight: 950;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+    .loop-node {
+      min-height: 230px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 24px;
+      background: #fbfdff;
+      position: relative;
+    }
+    .loop-node:before {
+      content: attr(data-step);
+      display: grid;
+      place-items: center;
+      width: 38px;
+      height: 38px;
+      border-radius: 999px;
+      color: #fff;
+      background: var(--primary);
+      font-weight: 950;
+      margin-bottom: 16px;
+    }
+    .loop-node:not(:last-child):after {
+      content: "→";
+      position: absolute;
+      top: 50%;
+      right: -19px;
+      transform: translateY(-50%);
+      color: var(--primary);
+      font-size: 24px;
+      font-weight: 950;
+      z-index: 1;
+    }
+    .loop-return {
+      grid-column: 1 / -1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      padding: 16px;
+      border: 1px dashed #9fb0f7;
+      border-radius: var(--radius);
+      background: #f5f7ff;
+      color: #263fa3;
+      font-weight: 950;
+    }
+
+    .prototype {
+      background: #111827;
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: 0 28px 70px rgba(15, 23, 42, .22);
+      border: 1px solid #1f2937;
+    }
+    .terminal-bar {
+      background: #0b1220;
+      color: #cbd5e1;
+      min-height: 48px;
+      padding: 10px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      border-bottom: 1px solid #233044;
+    }
+    .lights { display: flex; gap: 7px; }
+    .light { width: 11px; height: 11px; border-radius: 50%; background: #ef4444; }
+    .light:nth-child(2) { background: #f59e0b; }
+    .light:nth-child(3) { background: #22c55e; }
+    .tabs { display: flex; gap: 8px; flex-wrap: wrap; }
+    .tab {
+      border: 1px solid #334155;
+      background: #172033;
+      color: #cbd5e1;
+      border-radius: 999px;
+      min-height: 34px;
+      padding: 7px 13px;
+      font-size: 13px;
+      font-weight: 850;
+    }
+    .tab.active { background: #e0e7ff; color: #263fa3; border-color: #aab8ff; }
+    .workbench { background: #f8fafc; padding: 20px; }
+    .view { display: none; }
+    .view.active { display: block; }
+    .toolbar { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 16px; flex-wrap: wrap; }
+    .btn {
+      min-height: 38px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 8px 13px;
+      background: #fff;
+      color: #1f2937;
+      font-weight: 850;
+      font-size: 14px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    .btn.primary { background: var(--primary); color: #fff; border-color: var(--primary); }
+    .btn.buy { background: var(--buy); color: #fff; border-color: var(--buy); }
+    .btn.sell { background: var(--sell); color: #fff; border-color: var(--sell); }
+    .btn.ghost { background: transparent; }
+    .btn:disabled { opacity: .55; cursor: not-allowed; }
+    .hidden { display: none !important; }
+    .market-grid { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(320px, .95fr); gap: 18px; align-items: start; }
+    .news-card { border: 1px solid var(--line); background: #fff; border-radius: var(--radius); overflow: hidden; }
+    .news-top { border-bottom: 1px solid var(--line); padding: 14px 16px; display: flex; align-items: center; justify-content: space-between; gap: 10px; background: #fbfdff; }
+    .ticker { font-size: 12px; font-weight: 950; color: var(--primary); letter-spacing: .08em; }
+    .news-body { padding: 18px; }
+    .headline { font-size: 24px; line-height: 1.2; font-weight: 950; margin-bottom: 8px; letter-spacing: 0; }
+    .subhead { color: #475569; font-size: 15px; margin-bottom: 14px; }
+    .bullet-list { display: none; margin: 14px 0 0; padding-left: 20px; color: #334155; }
+    .bullet-list.open { display: grid; gap: 8px; }
+    .signal-panel { border: 1px solid var(--line); border-radius: var(--radius); background: #fff; padding: 18px; }
+    .signal {
+      padding: 16px;
+      border-radius: var(--radius);
+      border: 1px solid;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      margin-bottom: 16px;
+    }
+    .signal.buy { color: var(--buy); border-color: #9ee5ca; background: var(--buy-soft); }
+    .signal.sell { color: var(--sell); border-color: #ffd0d0; background: var(--sell-soft); }
+    .signal-title { font-size: 26px; line-height: 1; font-weight: 950; }
+    .confidence { font-size: 13px; font-weight: 950; opacity: .88; }
+    .reason-grid { display: grid; gap: 10px; }
+    .reason {
+      border: 1px solid var(--line);
+      border-left-width: 5px;
+      border-radius: var(--radius);
+      padding: 13px;
+      background: #fff;
+    }
+    .reason.buy { border-left-color: var(--buy); }
+    .reason.sell { border-left-color: var(--sell); }
+    .reason h4 { display: flex; align-items: center; justify-content: space-between; gap: 8px; font-size: 14px; }
+    .reason-actions { display: inline-flex; align-items: center; gap: 6px; flex-wrap: wrap; justify-content: flex-end; }
+    .mini-btn {
+      min-height: 28px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 4px 9px;
+      background: #fff;
+      color: #334155;
+      font-size: 12px;
+      font-weight: 900;
+    }
+    .mini-btn.danger { color: var(--sell); border-color: #ffd0d0; background: var(--sell-soft); }
+    .reason textarea {
+      width: 100%;
+      min-height: 74px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 10px;
+      resize: vertical;
+      color: #1f2937;
+      background: #fff;
+    }
+    .reason p { color: #334155; font-size: 14px; }
+    .expert-box { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--line); }
+    .keyword-bank { display: none; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
+    .keyword-bank.open { display: flex; }
+    .add-row { display: none; margin-top: 14px; }
+    .add-row.open { display: grid; grid-template-columns: 1fr auto; gap: 10px; align-items: start; }
+    .toast {
+      position: fixed;
+      right: 24px;
+      bottom: 24px;
+      min-width: 260px;
+      max-width: 360px;
+      padding: 14px 16px;
+      background: #101827;
+      color: #fff;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      opacity: 0;
+      transform: translateY(12px);
+      pointer-events: none;
+      transition: .2s ease;
+      z-index: 50;
+    }
+    .toast.show { opacity: 1; transform: translateY(0); }
+
+    .filters {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(120px, 1fr));
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+    .filters select, .filters input {
+      min-height: 38px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: #fff;
+      padding: 7px 9px;
+      color: #1f2937;
+      font-weight: 700;
+    }
+    .gt-layout { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(320px, .95fr); gap: 18px; align-items: start; }
+    .gt-list { display: grid; gap: 10px; max-height: 660px; overflow: auto; padding-right: 4px; }
+    .gt-item {
+      width: 100%;
+      text-align: left;
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 14px;
+    }
+    .gt-item.active { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(49, 87, 201, .12); }
+    .gt-meta { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
+    .experts { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 10px; }
+    .expert-chip { border: 1px solid var(--line); border-radius: var(--radius); padding: 7px 8px; background: #f8fafc; font-size: 12px; font-weight: 850; text-align: center; }
+    .expert-chip.y { color: var(--buy); background: var(--buy-soft); border-color: #b6ead7; }
+    .expert-chip.n { color: var(--sell); background: var(--sell-soft); border-color: #ffd0d0; }
+    .detail-panel { position: sticky; top: 16px; }
+    .detail-block { border-top: 1px solid var(--line); padding-top: 14px; margin-top: 14px; }
+    .editable-field {
+      width: 100%;
+      min-height: 70px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 10px;
+      resize: vertical;
+      background: #fff;
+    }
+    .scenario {
+      display: none;
+      margin-top: 14px;
+      border: 1px solid #b6ead7;
+      border-radius: var(--radius);
+      background: var(--buy-soft);
+      padding: 14px;
+    }
+    .scenario.open { display: block; }
+
+    .metric-carousel {
+      min-height: 430px;
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      align-items: stretch;
+      gap: 16px;
+      margin-top: 28px;
+    }
+    .metric-arrow {
+      align-self: center;
+      width: 46px;
+      height: 46px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: #fff;
+      color: var(--primary);
+      font-size: 24px;
+      font-weight: 950;
+      box-shadow: var(--shadow);
+    }
+    .metric-card {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: #fff;
+      box-shadow: var(--shadow);
+      padding: 36px;
+      display: grid;
+      grid-template-columns: minmax(220px, .75fr) minmax(0, 1fr);
+      gap: 26px;
+      align-items: center;
+    }
+    .metric-value {
+      font-size: clamp(58px, 10vw, 108px);
+      line-height: .95;
+      font-weight: 950;
+      color: var(--primary);
+    }
+    .metric-name { font-size: 28px; line-height: 1.25; font-weight: 950; margin: 8px 0 12px; }
+    .metric-dots { display: flex; gap: 8px; justify-content: center; margin-top: 14px; }
+    .metric-dot { width: 9px; height: 9px; border-radius: 999px; background: #cbd5e1; }
+    .metric-dot.active { width: 26px; background: var(--primary); }
+    .go-box {
+      margin-top: 34px;
+      padding: 38px;
+      border: 2px solid #223b96;
+      border-radius: var(--radius);
+      background: #172554;
+      color: #fff;
+      box-shadow: 0 28px 70px rgba(23, 37, 84, .22);
+    }
+    .go-box h3 { font-size: clamp(28px, 4vw, 44px); margin-bottom: 18px; }
+    .go-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; margin-top: 24px; }
+    .go-item { border: 1px solid rgba(255,255,255,.22); border-radius: var(--radius); padding: 18px; background: rgba(255,255,255,.08); }
+    .go-item b { display: block; font-size: 18px; margin-bottom: 6px; }
+
+    @media (max-width: 1060px) {
+      .shell { grid-template-columns: 1fr; }
+      .sidebar { position: static; height: auto; }
+      .nav { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      main { padding: 28px 18px; }
+      section { min-height: auto; padding: 52px 0; }
+      .two, .three, .four, .market-grid, .gt-layout, .loop, .metric-card, .go-grid { grid-template-columns: 1fr; }
+      .flow { grid-template-columns: 1fr; }
+      .arrow { display: none; }
+      .loop-node:not(:last-child):after { content: "↓"; top: auto; right: 50%; bottom: -25px; transform: translateX(50%); }
+      .filters { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .detail-panel { position: static; }
+    }
+    @media (max-width: 620px) {
+      .nav { grid-template-columns: 1fr; }
+      .brand h1 { font-size: 23px; }
+      .toolbar, .band-head, .signal { align-items: stretch; flex-direction: column; }
+      .add-row.open { grid-template-columns: 1fr; }
+      .filters, .experts { grid-template-columns: 1fr; }
+      .headline { font-size: 20px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <aside class="sidebar">
+      <div class="brand">
+        <h1>EIDOS<span>.</span></h1>
+        <p>Expert Intelligence Digitalization OS</p>
+      </div>
+      <nav class="nav" id="nav">
+        <a href="#summary">1. 전략적 당위성</a>
+        <a href="#problem">2. 직관의 간극</a>
+        <a href="#principles">3. 설계 원칙</a>
+        <a href="#strategy">4. 3-Layer GT</a>
+        <a href="#architecture">5. 운영 구조</a>
+        <a href="#prototype">6. 프로토타입</a>
+        <a href="#metrics">7. 실행 지표</a>
+      </nav>
+    </aside>
+
+    <main>
+      <div class="content">
+        <section id="summary">
+          <span class="eyebrow">Executive Summary</span>
+          <h2>From Tacit Expertise to<br><span class="highlight">Structured Intelligence</span></h2>
+          <p class="lead">EIDOS는 AI 트레이딩 예측 모델이 아니라, 전문가 머릿속에만 존재하는 보이지 않는 판단의 형상(Form)을 발견하고 자산화하는 지식 운영체제입니다. 핵심은 더 뛰어난 범용 모델을 찾는 것이 아니라, SNJ 고유의 추론 역량(Proprietary reasoning capability)을 반복 가능한 데이터와 추론 구조로 바꾸는 것입니다.</p>
+          <div class="grid three" style="margin-top:26px">
+            <div class="card flat">
+              <div class="micro muted">MVP Core Hypothesis</div>
+              <div class="metric">Yes / No</div>
+              <p class="muted">전문가의 암묵지와 의사결정 프레임워크는 자동 반복 가능한 데이터 및 추론 구조로 변환될 수 있는가?</p>
+            </div>
+            <div class="card flat">
+              <div class="micro muted">Primary Asset</div>
+              <div class="metric">GT</div>
+              <p class="muted">모델의 병목은 연산 능력이 아니라 학습시킬 구조화된 정답(Ground Truth)의 부재입니다.</p>
+            </div>
+            <div class="card flat">
+              <div class="micro muted">Success Criterion</div>
+              <div class="metric">Yield</div>
+              <p class="muted">성공 기준은 예측 정확도가 아니라 전문가 직관 중 어느 비율이 명시적 언어로 구조화되는가입니다.</p>
+            </div>
+          </div>
+        </section>
+
+        <section id="problem">
+          <span class="eyebrow">Problem Definition</span>
+          <h2>Why Existing AI Fails:<br><span class="highlight">직관의 간극과 시스템 부재</span></h2>
+          <div class="grid two" style="margin-top:24px">
+            <div class="card">
+              <h3>1. Reference Point의 부재</h3>
+              <p class="muted">AI는 “매출 5% 감소”를 절대값으로 해석해 부정 신호로 볼 수 있습니다. 반면 전문가는 시장 컨센서스 -10%와의 갭을 계산해 악재 해소(Uncertainty Resolved)라는 호재로 상대 평가합니다.</p>
+              <div class="quote" style="margin-top:18px">"텍스트 안의 사실보다, 무엇과 비교하는지가 판단을 바꾼다."</div>
+            </div>
+            <div class="card">
+              <h3>2. Market Regime 해석의 한계</h3>
+              <p class="muted">동일한 뉴스도 코로나 시기와 계절성 독감 시기의 마스크 뉴스처럼 시장 국면에 따라 전혀 다르게 해석됩니다. 기존 AI는 정적인 키워드와 고정 프롬프트에 갇혀 동적인 맥락을 놓칩니다.</p>
+              <div class="quote" style="margin-top:18px">"AI의 오판은 지능 부족이 아니라 판단 프레임워크 미입력에서 발생한다."</div>
+            </div>
+          </div>
+        </section>
+
+        <section id="principles">
+          <span class="eyebrow">Design Principles</span>
+          <h2>전문가 참여를 가장 희소한 자원으로 설계한다</h2>
+          <div class="grid three" style="margin-top:24px">
+            <div class="card">
+              <h3>1. The bottleneck is GT generation</h3>
+              <p class="muted">모델 스펙보다 먼저 학습시킬 정답을 만들어야 합니다. 따라서 MVP 리소스는 모델 고도화가 아니라 데이터 생성 플라이휠 인프라에 우선 투입됩니다.</p>
+            </div>
+            <div class="card">
+              <h3>2. Expert participation is scarce</h3>
+              <p class="muted">전문가의 시간과 주의력은 가장 희소한 자산입니다. 빈칸 입력 대신 1-Click 승인과 틀린 항목만 수정하는 흐름으로 입력 마찰을 최소화합니다.</p>
+            </div>
+            <div class="card">
+              <h3>3. Perfect extraction is impossible</h3>
+              <p class="muted">모든 직관을 100% 설명할 수는 없습니다. 중요한 것은 구조화 가능한 영역의 현실적인 비율(Yield)을 측정하고, 프로젝트 타당성을 검증하는 것입니다.</p>
+            </div>
+          </div>
+        </section>
+
+        <section id="strategy">
+          <span class="eyebrow">Core Strategy</span>
+          <h2>정답을 단일 레이블이 아닌<br><span class="highlight">3-Layer GT</span>로 관리한다</h2>
+          <div class="grid three" style="margin-top:24px">
+            <div class="card">
+              <span class="pill">Layer 1. Behavioral Evidence</span>
+              <h3 style="margin-top:12px">행동 증거 / 사실</h3>
+              <p class="muted">특정 뉴스 발생 시 전문가가 어떤 뉴스, 공시, ETF 화면을 조회했는지 추적합니다. 이는 정답이 아니라 밀도 높은 질문을 유도하는 회고 트리거입니다.</p>
+            </div>
+            <div class="card">
+              <span class="pill buy">L2. Reasoning GT</span>
+              <h3 style="margin-top:12px">추론 / 주관</h3>
+              <p class="muted">전문가가 특정 결론을 내린 주관적 논리입니다. AI 초안에 대한 승인 또는 수정이 판단 프레임워크로 저장됩니다.</p>
+            </div>
+            <div class="card">
+              <span class="pill warn">Layer 3. Market Outcome</span>
+              <h3 style="margin-top:12px">시장 결과 / 객관</h3>
+              <p class="muted">시그널 이후 실제 주가 움직임입니다. Outcome을 맹목적 정답으로 삼지 않고 L2 추론 퀄리티와 분리해 평가합니다.</p>
+            </div>
+          </div>
+        </section>
+
+        <section id="architecture">
+          <span class="eyebrow">Operating Architecture</span>
+          <h2>3-Tier Data Pipeline이<br><span class="highlight">닫힌 피드백 루프</span>를 만든다</h2>
+          <p class="lead">EIDOS는 관찰(Capture), 최소 마찰 라벨링(Label), 검증 및 정제(Validate)를 반복합니다. 이 루프가 쌓일수록 Reasoning Path 가설과 Taxonomy가 정교해지고, 다음 라벨링의 품질이 다시 개선됩니다.</p>
+          <div class="loop">
+            <div class="loop-node" data-step="1">
+              <span class="pill">Stage 1</span>
+              <h3>Context Capture Tool</h3>
+              <p class="muted">Behavior Tracker와 STT 메모로 전문가가 무엇을 보고 말했는지 백그라운드에서 포착합니다. L1 Behavioral Evidence를 수집합니다.</p>
+            </div>
+            <div class="loop-node" data-step="2">
+              <span class="pill buy">Stage 2</span>
+              <h3>Active Labeling Dashboard</h3>
+              <p class="muted">Cold-start 엔진이 먼저 시그널 초안을 제시합니다. 전문가는 동의 또는 틀린 항목 수정만으로 L2 Reasoning GT를 남깁니다.</p>
+            </div>
+            <div class="loop-node" data-step="3">
+              <span class="pill warn">Stage 3</span>
+              <h3>GT Database Management</h3>
+              <p class="muted">L1, L2, L3 데이터를 결합하고, 주간 회고에서 고가치 10건을 정제해 추론 프레임워크를 갱신합니다.</p>
+            </div>
+            <div class="loop-return">Taxonomy 정제 → Reasoning Path 가설 개선 → 다음 Active Labeling의 초안 품질 향상</div>
+          </div>
+        </section>
+
+        <section id="prototype">
+          <span class="eyebrow">Interactive Prototype</span>
+          <h2>AI 가설을 전문가 지식으로 바꾸는 업무 화면</h2>
+          <p class="lead">아래 프로토타입은 랜덤 시장 이벤트 생성, 뉴스 상세 표시, AI 액션 제안, 전문가 동의/비동의, 추론 수정, 자동 저장, GT 관리까지 하나의 닫힌 루프로 보여줍니다.</p>
+
+          <div class="prototype" style="margin-top:24px">
+            <div class="terminal-bar">
+              <div class="lights"><span class="light"></span><span class="light"></span><span class="light"></span></div>
+              <div class="small" style="font-weight:900">EIDOS KNOWLEDGE ASSETIZATION WORKBENCH</div>
+              <div class="tabs">
+                <button class="tab active" data-view-target="labeling">Active Labeling</button>
+                <button class="tab" data-view-target="gt">GT Management</button>
+              </div>
+            </div>
+
+            <div class="workbench">
+              <div id="labeling" class="view active">
+                <div class="toolbar">
+                  <div>
+                    <h3>Active Labeling Tool</h3>
+                    <p class="small muted">시장 이벤트 → AI 제안 → 전문가 수정 → GT 자산화</p>
+                  </div>
+                  <button class="btn primary" id="nextEventBtn">다음 기사</button>
+                </div>
+
+                <div class="market-grid">
+                  <div class="news-card">
+                    <div class="news-top">
+                      <span class="ticker" id="newsSource">BLOOMBERG SIMULATED</span>
+                      <span class="pill" id="newsSector">Sector</span>
+                    </div>
+                    <div class="news-body">
+                      <div class="gt-meta" id="keywordRow"></div>
+                      <div class="headline" id="headline"></div>
+                      <p class="subhead" id="subhead"></p>
+                      <button class="btn ghost" id="toggleDetailsBtn">자세히 보기</button>
+                      <ul class="bullet-list" id="bulletList"></ul>
+                    </div>
+                  </div>
+
+                  <div class="signal-panel">
+                    <div id="signalBox" class="signal buy">
+                      <div>
+                        <div class="micro">AI Suggested Action</div>
+                        <div class="signal-title" id="actionText">Strong Buy</div>
+                      </div>
+                      <div class="confidence" id="confidenceText">Confidence 82%</div>
+                    </div>
+
+                    <div class="reason-grid" id="reasonGrid"></div>
+                    <div class="keyword-bank" id="keywordBank"></div>
+                    <div class="add-row" id="addRow">
+                      <textarea class="editable-field" id="newReasonInput" placeholder="새로운 추론 근거를 입력하세요."></textarea>
+                      <button class="btn" id="addReasonBtn">추론 근거 추가 완료</button>
+                    </div>
+
+                    <div class="expert-box">
+                      <span class="micro muted">Expert 1 Decision</span>
+                      <button class="btn buy" id="agreeBtn">Y 동의</button>
+                      <button class="btn sell" id="disagreeBtn">N 비동의</button>
+                      <button class="btn primary hidden" id="saveRevisionBtn">수정 완료</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div id="gt" class="view">
+                <div class="toolbar">
+                  <div>
+                    <h3>GT Database Management</h3>
+                    <p class="small muted">자산화된 GT 데이터를 검색, 검수, 수정, 재검증합니다.</p>
+                  </div>
+                  <button class="btn primary" id="refreshGtBtn">목록 갱신</button>
+                </div>
+
+                <div class="filters">
+                  <input id="dateFilter" type="date">
+                  <select id="sectorFilter"><option value="">전체 섹터</option></select>
+                  <select id="signalFilter"><option value="">전체 신호</option><option value="Buy">Buy</option><option value="Sell">Sell</option></select>
+                  <select id="answerFilter"><option value="">전체 답변</option><option value="동의">동의 포함</option><option value="비동의">비동의 포함</option></select>
+                  <select id="agreeFilter"><option value="">전체 일치</option><option value="all">All 3 agree</option><option value="split">1:2 split</option></select>
+                </div>
+
+                <div class="gt-layout">
+                  <div class="gt-list" id="gtList"></div>
+                  <div class="card detail-panel" id="gtDetail"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section id="metrics">
+          <span class="eyebrow">Execution Metrics</span>
+          <h2>MVP의 평가는 예측 정확도가 아니라<br><span class="highlight">지식 추출 수율</span>로 시작한다</h2>
+          <p class="lead">세 지표는 서로 다른 층위를 봅니다. 핵심 가설 지표는 구조화 가능성, 운영 지표는 전문가 마찰, 학습 지표는 Taxonomy의 수렴 여부를 검증합니다.</p>
+          <div class="metric-carousel">
+            <button class="metric-arrow" id="metricPrevBtn" aria-label="이전 지표">‹</button>
+            <div class="metric-card" id="metricCard"></div>
+            <button class="metric-arrow" id="metricNextBtn" aria-label="다음 지표">›</button>
+          </div>
+          <div class="metric-dots" id="metricDots"></div>
+          <div class="go-box">
+            <span class="eyebrow" style="background:rgba(255,255,255,.12); color:#dbeafe">Final Decision Gate</span>
+            <h3>Go / No-Go 기준은 AI 성능이 아니라 암묵지의 디지털 자산화 가능성이다</h3>
+            <p>Yes가 증명되면 EIDOS는 SNJ의 모든 AI 역량이 구축될 고유한 토대가 됩니다. No가 확인되면 투자 의사결정 자동화 모델 고도화보다, AI가 전문가 의사결정을 효율화하는 보조 시스템으로 방향을 전환해야 합니다.</p>
+            <div class="go-grid">
+              <div class="go-item">
+                <b>GO</b>
+                <span>Knowledge Extraction Yield가 의미 있는 수준으로 확인되고, Expert Approval Time이 12초 이내로 수렴하며, Taxonomy Coverage가 상승 추세를 보일 때.</span>
+              </div>
+              <div class="go-item">
+                <b>NO-GO / PIVOT</b>
+                <span>구조화 가능한 추론 비율이 낮거나 전문가 입력 마찰이 해소되지 않으면, 자동화 모델이 아니라 의사결정 보조 UX에 집중합니다.</span>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script>
+    const sectors = ["Semiconductors", "EV Battery", "Biotech", "Defense", "Energy", "Cloud AI", "Shipbuilding", "Consumer"];
+    const drivers = ["export controls", "earnings revision", "capacity expansion", "inventory drawdown", "regulatory approval", "order backlog", "pricing pressure", "supply disruption"];
+    const geos = ["U.S.", "China", "Korea", "Europe", "Middle East", "Japan"];
+    const assets = ["KOSPI exporters", "SOX-linked names", "battery materials", "defense primes", "LNG carriers", "AI infrastructure suppliers", "healthcare growth stocks"];
+
+    const scenarioTemplates = [
+      {
+        tone: "buy",
+        strength: "Strong",
+        title: "unexpected policy support lifts forward demand visibility",
+        bullets: [
+          "기관 투자자는 정책 변화가 2개 분기 이상 수요 가시성을 높일 수 있다고 평가했다.",
+          "밸류체이션 부담은 남아 있으나, 주문 잔고와 마진 방어력이 동시에 개선되는 구간이다.",
+          "단기 변동성보다 실적 추정치 상향 가능성이 더 큰 신호로 해석된다."
+        ]
+      },
+      {
+        tone: "sell",
+        strength: "Normal",
+        title: "margin pressure deepens as customers delay procurement cycle",
+        bullets: [
+          "최종 고객의 구매 지연이 재고 부담과 가격 할인 압력으로 이어지고 있다.",
+          "공급망 정상화에도 불구하고 단기 실적 추정치 하향 가능성이 높아졌다.",
+          "섹터 내 방어적 포지션으로 회전 매매가 나타날 수 있다."
+        ]
+      },
+      {
+        tone: "buy",
+        strength: "Weak",
+        title: "early cycle recovery signal emerges after inventory correction",
+        bullets: [
+          "재고 조정이 마무리되는 조짐은 긍정적이나 아직 주문 강도는 제한적이다.",
+          "확증 신호가 부족해 공격적 매수보다 점진적 비중 확대가 적절하다.",
+          "후속 가격 지표와 고객사 가이던스 확인이 필요하다."
+        ]
+      },
+      {
+        tone: "sell",
+        strength: "Strong",
+        title: "geopolitical escalation raises tail-risk across supply chain",
+        bullets: [
+          "지정학 리스크가 물류 비용, 조달 일정, 고객 투자 계획을 동시에 흔들 수 있다.",
+          "이벤트가 해소되기 전까지 리스크 프리미엄 확대가 불가피하다.",
+          "수급 쏠림이 강한 종목군은 손절성 매물이 가속될 수 있다."
+        ]
+      }
+    ];
+
+    let currentEvent = null;
+    let editMode = false;
+    let selectedGtId = null;
+    let gtRecords = seedGtRecords();
+    let activeMetricIndex = 0;
+
+    const operatingMetrics = [
+      {
+        label: "핵심 가설 지표",
+        name: "Knowledge Extraction Yield",
+        value: "62%",
+        subtitle: "지식 추출 수율",
+        description: "전체 회고 및 피드백 사례 중, 전문가의 주관적 직관이 시스템의 명시적 언어(Taxonomy)로 구조화된 비율입니다.",
+        implication: "100% 구조화는 불가능하다는 전제를 받아들이고, 실제 디지털 자산화가 가능한 직관의 현실적인 비중을 확인합니다.",
+        importance: "MVP의 가장 중요한 Yes / No 판정 기준입니다."
+      },
+      {
+        label: "운영 지표",
+        name: "Expert Approval Time",
+        value: "12s",
+        subtitle: "전문가 1건 검토 시간",
+        description: "AI의 추론 근거 초안을 확인하고 최종 승인 또는 수정하기까지 걸리는 평균 시간입니다.",
+        implication: "45초 수준의 검토 시간을 12초 이내로 줄이면, 전문가 참여 마찰이 실질적으로 해소되었음을 의미합니다.",
+        importance: "데이터 수집 체계가 현업 흐름을 방해하지 않는지 확인합니다."
+      },
+      {
+        label: "학습 지표",
+        name: "Taxonomy Coverage Trend",
+        value: "↑",
+        subtitle: "사고 구조화 추세",
+        description: "사전 정의된 Taxonomy만으로 전문가 판단을 설명할 수 있는 비율이 지속적으로 상승하는지 측정합니다.",
+        implication: "새로운 판단 패턴 발견률이 감소하면, 구조화 작업이 안정적인 한계선으로 수렴하고 있음을 보여줍니다.",
+        importance: "EIDOS가 단발성 라벨링 툴이 아니라 조직 지식 운영체제로 확장 가능한지 판단합니다."
+      }
+    ];
+
+    function $(id) { return document.getElementById(id); }
+    function today() { return new Date().toISOString().slice(0, 10); }
+    function pick(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+    function cap(word) { return word.charAt(0).toUpperCase() + word.slice(1); }
+
+    function showToast(message) {
+      const toast = $("toast");
+      toast.textContent = message;
+      toast.classList.add("show");
+      setTimeout(() => toast.classList.remove("show"), 2100);
+    }
+
+    function generateEvent() {
+      const sector = pick(sectors);
+      const driver = pick(drivers);
+      const geo = pick(geos);
+      const asset = pick(assets);
+      const template = pick(scenarioTemplates);
+      const action = `${template.strength} ${cap(template.tone)}`;
+      const confidence = template.strength === "Strong" ? 84 : template.strength === "Normal" ? 71 : 59;
+      const keywords = [sector, geo, driver, asset].map((x) => x.replace(/\b\w/g, (c) => c.toUpperCase()));
+
+      currentEvent = {
+        id: `GT-${Date.now()}`,
+        date: today(),
+        sector,
+        driver,
+        geo,
+        asset,
+        keywords,
+        title: `${geo} ${sector} ${template.title}`,
+        subtitle: `${asset} 중심으로 투자자 포지셔닝이 빠르게 재가격화되는 가운데, EIDOS는 ${action} 신호를 제안했다.`,
+        bullets: template.bullets,
+        signal: cap(template.tone),
+        strength: template.strength,
+        action,
+        confidence,
+        reasons: buildReasons(template.tone, sector, driver, geo, asset)
+      };
+
+      editMode = false;
+      renderEvent();
+    }
+
+    function buildReasons(tone, sector, driver, geo, asset) {
+      const isBuy = tone === "buy";
+      return [
+        {
+          type: isBuy ? "buy" : "sell",
+          title: "업계 동향",
+          text: isBuy
+            ? `${sector} 밸류체인에서 ${driver}가 수요 가시성을 높이며 ${asset}의 실적 추정치 상향 여지를 만든다.`
+            : `${sector} 밸류체인에서 ${driver}가 마진과 주문 흐름을 압박해 ${asset}의 단기 리레이팅을 제한한다.`
+        },
+        {
+          type: isBuy ? "buy" : "sell",
+          title: "트렌드",
+          text: isBuy
+            ? `${geo} 투자자금이 성장성과 정책 수혜가 겹치는 종목군으로 이동하며 추세 추종 매수 가능성이 커졌다.`
+            : `${geo} 시장에서 방어적 섹터로 자금이 이동하고 있어 해당 테마의 모멘텀 둔화가 예상된다.`
+        },
+        {
+          type: isBuy ? "sell" : "sell",
+          title: "리스크",
+          text: isBuy
+            ? `긍정 신호에도 밸류에이션 부담과 이벤트 소멸 이후 차익 실현 가능성은 관리해야 한다.`
+            : `리스크가 가격에 완전히 반영되기 전까지 변동성 확대와 손절성 매물이 이어질 수 있다.`
+        },
+        {
+          type: isBuy ? "buy" : "sell",
+          title: "그 외 정보",
+          text: isBuy
+            ? `최근 수급 데이터와 애널리스트 코멘트는 동일 방향의 보조 신호를 제공한다.`
+            : `최근 수급 데이터와 기업 코멘트는 보수적인 포지셔닝을 지지한다.`
+        }
+      ];
+    }
+
+    function renderEvent() {
+      $("newsSector").textContent = currentEvent.sector;
+      $("keywordRow").innerHTML = currentEvent.keywords.map((k) => `<span class="pill">${k}</span>`).join("");
+      $("headline").textContent = currentEvent.title;
+      $("subhead").textContent = currentEvent.subtitle;
+      $("bulletList").innerHTML = currentEvent.bullets.map((b) => `<li>${b}</li>`).join("");
+      $("bulletList").classList.remove("open");
+      $("toggleDetailsBtn").textContent = "자세히 보기";
+      $("actionText").textContent = currentEvent.action;
+      $("confidenceText").textContent = `Confidence ${currentEvent.confidence}%`;
+      $("signalBox").className = `signal ${currentEvent.signal.toLowerCase()}`;
+      $("saveRevisionBtn").classList.add("hidden");
+      $("agreeBtn").disabled = false;
+      $("keywordBank").classList.remove("open");
+      $("addRow").classList.remove("open");
+      renderReasons(false);
+    }
+
+    function renderReasons(editable) {
+      const grid = $("reasonGrid");
+      grid.innerHTML = currentEvent.reasons.map((reason, index) => {
+        const body = editable
+          ? `<textarea data-reason-index="${index}">${reason.text}</textarea>`
+          : `<p>${reason.text}</p>`;
+        const tag = reason.type === "buy" ? "긍정 신호" : "부정 신호";
+        const actions = editable
+          ? `<span class="reason-actions">
+              <button class="mini-btn" data-focus-reason="${index}">수정</button>
+              <button class="mini-btn danger" data-delete-reason="${index}">삭제</button>
+            </span>`
+          : `<span class="pill ${reason.type}">${tag}</span>`;
+        return `<div class="reason ${reason.type}">
+          <h4><span>${reason.title}</span>${actions}</h4>
+          ${editable ? `<div class="gt-meta"><span class="pill ${reason.type}">${tag}</span></div>` : ""}
+          ${body}
+        </div>`;
+      }).join("");
+
+      grid.querySelectorAll("textarea").forEach((textarea) => {
+        textarea.addEventListener("input", () => {
+          currentEvent.reasons[Number(textarea.dataset.reasonIndex)].text = textarea.value;
+        });
+      });
+      grid.querySelectorAll("[data-focus-reason]").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const textarea = grid.querySelector(`[data-reason-index="${btn.dataset.focusReason}"]`);
+          if (textarea) textarea.focus();
+        });
+      });
+      grid.querySelectorAll("[data-delete-reason]").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          if (currentEvent.reasons.length <= 1) {
+            showToast("최소 1개의 추론 근거는 유지해야 합니다.");
+            return;
+          }
+          currentEvent.reasons.splice(Number(btn.dataset.deleteReason), 1);
+          renderReasons(true);
+        });
+      });
+    }
+
+    function enterEditMode() {
+      editMode = true;
+      $("agreeBtn").disabled = true;
+      $("saveRevisionBtn").classList.remove("hidden");
+      renderReasons(true);
+      renderKeywordBank();
+      $("keywordBank").classList.add("open");
+      $("addRow").classList.add("open");
+      showToast("비동의 사유를 수정할 수 있습니다.");
+    }
+
+    function renderKeywordBank() {
+      const keywords = [
+        "수급 반전", "마진 훼손", "정책 수혜", "재고 조정", "실적 추정치", "리스크 프리미엄", "고객사 지연", "주문 잔고"
+      ];
+      $("keywordBank").innerHTML = keywords.map((word) => `<button class="btn" data-keyword="${word}">${word}</button>`).join("");
+      $("keywordBank").querySelectorAll("button").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const input = $("newReasonInput");
+          input.value = input.value ? `${input.value} / ${btn.dataset.keyword}` : btn.dataset.keyword;
+        });
+      });
+    }
+
+    function saveCurrentRecord(answer) {
+      const expertAnswers = buildExpertAnswers(answer);
+      const record = {
+        id: currentEvent.id,
+        date: today(),
+        sector: currentEvent.sector,
+        title: currentEvent.title,
+        keywords: currentEvent.keywords,
+        action: currentEvent.action,
+        signal: currentEvent.signal,
+        strength: currentEvent.strength,
+        reasons: JSON.parse(JSON.stringify(currentEvent.reasons)),
+        experts: expertAnswers,
+        currentGt: `${currentEvent.sector} 이벤트에서 ${currentEvent.driver}가 ${currentEvent.signal} 판단을 유도하는 대표 사례`,
+        abstraction: `${currentEvent.geo}발 ${currentEvent.sector} 뉴스가 수요/마진/수급 중 두 가지 이상을 같은 방향으로 움직이면 ${currentEvent.action} 후보로 분류한다.`
+      };
+      gtRecords.unshift(record);
+      selectedGtId = record.id;
+      renderGt();
+      showToast("자산화 완료: GT 데이터가 자동 저장되었습니다.");
+      setTimeout(generateEvent, 850);
+    }
+
+    function buildExpertAnswers(primary) {
+      if (primary === "동의") {
+        return [
+          { name: "Expert 1", answer: "동의", note: "AI 추론과 액션에 동의" },
+          { name: "Expert 2", answer: Math.random() > .35 ? "동의" : "비동의", note: "리스크 강도 보정 필요" },
+          { name: "Expert 3", answer: "동의", note: "동일 방향 수급 확인" }
+        ];
+      }
+      return [
+        { name: "Expert 1", answer: "비동의", note: "추론 수정안 반영" },
+        { name: "Expert 2", answer: "동의", note: "원 신호는 유효" },
+        { name: "Expert 3", answer: Math.random() > .45 ? "비동의" : "동의", note: "추가 검증 필요" }
+      ];
+    }
+
+    function seedGtRecords() {
+      const base = [
+        ["2026-06-19", "Semiconductors", "Strong Buy", "Buy", ["HBM", "Export Controls", "SOX"]],
+        ["2026-06-18", "EV Battery", "Normal Sell", "Sell", ["Lithium", "Margin Pressure", "Europe"]],
+        ["2026-06-17", "Defense", "Strong Buy", "Buy", ["Order Backlog", "NATO", "FX"]],
+        ["2026-06-14", "Biotech", "Weak Buy", "Buy", ["FDA", "Pipeline", "Risk"]],
+        ["2026-06-13", "Energy", "Normal Sell", "Sell", ["LNG", "Oil Spread", "Middle East"]]
+      ];
+      return base.map((row, i) => {
+        const [date, sector, action, signal, keywords] = row;
+        const split = i % 2 === 1;
+        return {
+          id: `GT-SEED-${i + 1}`,
+          date,
+          sector,
+          title: `${sector} market signal reframed after ${keywords[1]} update`,
+          keywords,
+          action,
+          signal,
+          strength: action.split(" ")[0],
+          reasons: buildReasons(signal.toLowerCase(), sector, keywords[1], pick(geos), pick(assets)),
+          experts: split
+            ? [
+                { name: "Expert 1", answer: "동의", note: "방향성 동의" },
+                { name: "Expert 2", answer: "비동의", note: "가격 반영도 과소평가" },
+                { name: "Expert 3", answer: "동의", note: "수급 보조 신호 확인" }
+              ]
+            : [
+                { name: "Expert 1", answer: "동의", note: "추론 일치" },
+                { name: "Expert 2", answer: "동의", note: "리스크 허용 가능" },
+                { name: "Expert 3", answer: "동의", note: "액션 강도 적절" }
+              ],
+          currentGt: `${sector} 이벤트에서 ${keywords[1]}가 ${signal} 판단으로 연결되는 검증 사례`,
+          abstraction: `${sector} 관련 이벤트가 실적 추정치와 수급을 같은 방향으로 움직이면 ${action} 후보로 분류한다.`
+        };
+      });
+    }
+
+    function renderGt() {
+      populateFilters();
+      const records = filteredRecords();
+      const list = $("gtList");
+      list.innerHTML = records.length ? records.map((record) => renderGtItem(record)).join("") : `<div class="card flat">조건에 맞는 GT 데이터가 없습니다.</div>`;
+      list.querySelectorAll(".gt-item").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          selectedGtId = btn.dataset.id;
+          renderGt();
+        });
+      });
+      if (!selectedGtId || !gtRecords.some((r) => r.id === selectedGtId)) selectedGtId = records[0]?.id || null;
+      renderGtDetail();
+    }
+
+    function populateFilters() {
+      const current = $("sectorFilter").value;
+      const unique = [...new Set(gtRecords.map((r) => r.sector))].sort();
+      $("sectorFilter").innerHTML = `<option value="">전체 섹터</option>` + unique.map((s) => `<option value="${s}">${s}</option>`).join("");
+      $("sectorFilter").value = unique.includes(current) ? current : "";
+    }
+
+    function filteredRecords() {
+      const date = $("dateFilter").value;
+      const sector = $("sectorFilter").value;
+      const signal = $("signalFilter").value;
+      const answer = $("answerFilter").value;
+      const agreement = $("agreeFilter").value;
+      return gtRecords
+        .filter((r) => !date || r.date === date)
+        .filter((r) => !sector || r.sector === sector)
+        .filter((r) => !signal || r.signal === signal)
+        .filter((r) => !answer || r.experts.some((e) => e.answer === answer))
+        .filter((r) => {
+          if (!agreement) return true;
+          const agreeCount = r.experts.filter((e) => e.answer === "동의").length;
+          return agreement === "all" ? agreeCount === 3 : agreeCount === 1 || agreeCount === 2;
+        })
+        .sort((a, b) => b.date.localeCompare(a.date));
+    }
+
+    function renderGtItem(record) {
+      const agreeCount = record.experts.filter((e) => e.answer === "동의").length;
+      const split = agreeCount === 3 ? "All 3 agree" : "1:2 split";
+      return `<button class="gt-item ${record.id === selectedGtId ? "active" : ""}" data-id="${record.id}">
+        <h4>${record.title}</h4>
+        <div class="gt-meta">
+          <span class="pill">${record.date}</span>
+          <span class="pill">${record.sector}</span>
+          <span class="pill ${record.signal.toLowerCase()}">${record.action}</span>
+          <span class="pill warn">${split}</span>
+        </div>
+        <div class="gt-meta">${record.keywords.map((k) => `<span class="pill">${k}</span>`).join("")}</div>
+        <div class="experts">${record.experts.map((e) => `<span class="expert-chip ${e.answer === "동의" ? "y" : "n"}">${e.name}: ${e.answer}</span>`).join("")}</div>
+      </button>`;
+    }
+
+    function renderGtDetail(editable = false) {
+      const record = gtRecords.find((r) => r.id === selectedGtId);
+      if (!record) {
+        $("gtDetail").innerHTML = "<h3>GT Detail</h3><p class='muted'>목록에서 데이터를 선택하세요.</p>";
+        return;
+      }
+      const textOrEdit = (key, value) => editable
+        ? `<textarea class="editable-field" data-edit-key="${key}">${value}</textarea>`
+        : `<p class="muted">${value}</p>`;
+
+      $("gtDetail").innerHTML = `
+        <div class="toolbar">
+          <div>
+            <h3>${record.sector} GT Detail</h3>
+            <p class="small muted">${record.date} · ${record.action}</p>
+          </div>
+          <span class="pill ${record.signal.toLowerCase()}">${record.signal}</span>
+        </div>
+        <h4>${record.title}</h4>
+        <div class="gt-meta">${record.keywords.map((k) => `<span class="pill">${k}</span>`).join("")}</div>
+        <div class="detail-block">
+          <h4>AI 추론 결과</h4>
+          <div class="reason-grid">${record.reasons.map((r, i) => `<div class="reason ${r.type}">
+            <h4>${r.title}</h4>
+            ${editable ? `<textarea class="editable-field" data-reason-edit="${i}">${r.text}</textarea>` : `<p>${r.text}</p>`}
+          </div>`).join("")}</div>
+        </div>
+        <div class="detail-block">
+          <h4>전문가 답변</h4>
+          <div class="experts">${record.experts.map((e) => `<div class="expert-chip ${e.answer === "동의" ? "y" : "n"}">${e.name}: ${e.answer}<br><span class="small">${e.note}</span></div>`).join("")}</div>
+        </div>
+        <div class="detail-block">
+          <h4>현재 GT</h4>
+          ${textOrEdit("currentGt", record.currentGt)}
+        </div>
+        <div class="detail-block">
+          <h4>추상화 수준 요약</h4>
+          ${textOrEdit("abstraction", record.abstraction)}
+        </div>
+        <div class="detail-block">
+          <button class="btn" id="editGtBtn">${editable ? "취소" : "GT 수정"}</button>
+          <button class="btn primary" id="saveGtBtn" ${editable ? "" : "disabled"}>저장</button>
+          <button class="btn buy" id="scenarioBtn">유사 시나리오 생성</button>
+          <button class="btn sell" id="validateBtn" disabled>검증</button>
+          <div class="scenario" id="scenarioBox"></div>
+        </div>
+      `;
+
+      $("editGtBtn").addEventListener("click", () => renderGtDetail(!editable));
+      $("saveGtBtn").addEventListener("click", () => saveGtEdits(record));
+      $("scenarioBtn").addEventListener("click", () => generateSimilarScenario(record));
+      $("validateBtn").addEventListener("click", () => {
+        const scenarioText = $("scenarioBox").textContent || record.title;
+        sendScenarioToLabeling(record, scenarioText);
+      });
+    }
+
+    function saveGtEdits(record) {
+      document.querySelectorAll("[data-edit-key]").forEach((field) => {
+        record[field.dataset.editKey] = field.value;
+      });
+      document.querySelectorAll("[data-reason-edit]").forEach((field) => {
+        record.reasons[Number(field.dataset.reasonEdit)].text = field.value;
+      });
+      renderGtDetail(false);
+      showToast("GT 수정 내용이 저장되었습니다.");
+    }
+
+    function generateSimilarScenario(record) {
+      const box = $("scenarioBox");
+      box.classList.add("open");
+      box.innerHTML = `<h4>가상 유사 시나리오</h4>
+        <p>${record.sector}에서 동일한 ${record.keywords[1] || "시장 신호"}가 다른 지역으로 확산되고, 수급과 실적 추정치가 같은 방향으로 움직이는 상황.</p>
+        <div class="gt-meta"><span class="pill ${record.signal.toLowerCase()}">AI Suggested Action: ${record.action}</span><span class="pill">Active Labeling 후보</span></div>`;
+      $("validateBtn").disabled = false;
+    }
+
+    function sendScenarioToLabeling(record, scenarioText) {
+      currentEvent = {
+        id: `GT-SCENARIO-${Date.now()}`,
+        date: today(),
+        sector: record.sector,
+        driver: record.keywords[1] || "similar scenario",
+        geo: "Simulated",
+        asset: record.keywords[0] || record.sector,
+        keywords: ["Scenario", ...record.keywords.slice(0, 3)],
+        title: `Similar scenario validation: ${record.title}`,
+        subtitle: scenarioText,
+        bullets: [
+          "GT 관리 화면에서 생성된 유사 시나리오가 검증 대상으로 전송되었다.",
+          "전문가는 기존 GT의 추상화 규칙이 새로운 상황에도 성립하는지 확인한다.",
+          "검증 결과는 다시 3-Layer GT Database에 저장된다."
+        ],
+        signal: record.signal,
+        strength: record.strength,
+        action: record.action,
+        confidence: 76,
+        reasons: JSON.parse(JSON.stringify(record.reasons))
+      };
+      switchView("labeling");
+      renderEvent();
+      showToast("유사 시나리오가 Active Labeling으로 전송되었습니다.");
+    }
+
+    function addReason() {
+      const value = $("newReasonInput").value.trim();
+      if (!value) return;
+      currentEvent.reasons.push({ type: currentEvent.signal.toLowerCase(), title: "전문가 추가 근거", text: value });
+      $("newReasonInput").value = "";
+      renderReasons(editMode);
+    }
+
+    function renderMetricCarousel() {
+      const metric = operatingMetrics[activeMetricIndex];
+      $("metricCard").innerHTML = `
+        <div>
+          <span class="pill">${metric.label}</span>
+          <div class="metric-value">${metric.value}</div>
+          <h3 class="metric-name">${metric.subtitle}</h3>
+          <p class="muted">${metric.name}</p>
+        </div>
+        <div>
+          <h3>${metric.description}</h3>
+          <div class="detail-block">
+            <h4>시사점</h4>
+            <p class="muted">${metric.implication}</p>
+          </div>
+          <div class="detail-block">
+            <h4>중요도</h4>
+            <p class="muted">${metric.importance}</p>
+          </div>
+        </div>
+      `;
+      $("metricDots").innerHTML = operatingMetrics.map((_, index) => `<span class="metric-dot ${index === activeMetricIndex ? "active" : ""}"></span>`).join("");
+    }
+
+    function moveMetric(direction) {
+      activeMetricIndex = (activeMetricIndex + direction + operatingMetrics.length) % operatingMetrics.length;
+      renderMetricCarousel();
+    }
+
+    function switchView(id) {
+      document.querySelectorAll(".tab").forEach((tab) => tab.classList.toggle("active", tab.dataset.viewTarget === id));
+      document.querySelectorAll(".view").forEach((view) => view.classList.toggle("active", view.id === id));
+      if (id === "gt") renderGt();
+    }
+
+    function initNav() {
+      const links = [...document.querySelectorAll(".nav a")];
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          links.forEach((link) => link.classList.toggle("active", link.getAttribute("href") === `#${entry.target.id}`));
+        });
+      }, { rootMargin: "-25% 0px -65% 0px", threshold: 0 });
+      document.querySelectorAll("section").forEach((section) => observer.observe(section));
+    }
+
+    document.querySelectorAll(".tab").forEach((tab) => tab.addEventListener("click", () => switchView(tab.dataset.viewTarget)));
+    $("nextEventBtn").addEventListener("click", generateEvent);
+    $("toggleDetailsBtn").addEventListener("click", () => {
+      $("bulletList").classList.toggle("open");
+      $("toggleDetailsBtn").textContent = $("bulletList").classList.contains("open") ? "접기" : "자세히 보기";
+    });
+    $("agreeBtn").addEventListener("click", () => saveCurrentRecord("동의"));
+    $("disagreeBtn").addEventListener("click", enterEditMode);
+    $("saveRevisionBtn").addEventListener("click", () => saveCurrentRecord("비동의"));
+    $("addReasonBtn").addEventListener("click", addReason);
+    $("metricPrevBtn").addEventListener("click", () => moveMetric(-1));
+    $("metricNextBtn").addEventListener("click", () => moveMetric(1));
+    $("refreshGtBtn").addEventListener("click", renderGt);
+    ["dateFilter", "sectorFilter", "signalFilter", "answerFilter", "agreeFilter"].forEach((id) => {
+      $(id).addEventListener("change", renderGt);
+    });
+
+    initNav();
+    generateEvent();
+    renderGt();
+    renderMetricCarousel();
+  </script>
+</body>
+</html>
